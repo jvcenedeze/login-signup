@@ -281,7 +281,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'searchUser',
+      'searchEmail',
       'searchPhone',
       'postUser'
     ]),
@@ -302,7 +302,7 @@ export default {
       } else {
         try {
           // eslint-disable-next-line no-unused-vars
-          const email = await this.searchUser(this.user.email)
+          const email = await this.searchEmail(this.user.email)
           // eslint-disable-next-line no-unused-vars
           const phone = await this.searchPhone(this.user.phone)
           if (this.userEmail === '' && this.userPhone === '') {

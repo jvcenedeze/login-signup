@@ -122,6 +122,7 @@
 <script>
 
 import { required, email, minLength } from 'vuelidate/lib/validators'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Login',
@@ -142,7 +143,15 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({
+      serverUser: state => state.user
+    })
+  },
   methods: {
+    ...mapActions([
+      'searchUser'
+    ]),
     showPassword () {
       let input = document.getElementById("input-password");
       if (input.type === "password") {
@@ -151,18 +160,26 @@ export default {
         input.type = "password";
       }
     },
-    submit () {
+    async submit () {
       this.isLoading = true
-      setTimeout(() => {
         this.$v.$touch()
         if (this.$v.$invalid) {
           alert('Erro ao tentar conectar, verifique os campos e tente novamente!')
           this.isLoading = false
         } else {
-          alert('form enviado')
-          this.isLoading = false
+          // eslint-disable-next-line no-unused-vars
+          const user = await this.searchUser(this.user.email)
+          if (this.serverUser === '') {
+            alert('Email não cadastrado.')
+            this.isLoading = false
+          } else if (this.serverUser.email == this.user.email && this.serverUser.senha == this.user.password) {
+            alert('Login efetuado com sucesso!')
+            this.isLoading = false
+          } else {
+            alert('Senha incorreta.')
+            this.isLoading = false
+          }
         }
-      }, 1000)
     }
   },
   mounted () {

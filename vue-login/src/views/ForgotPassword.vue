@@ -67,6 +67,7 @@
 <script>
 
 import { required, email } from 'vuelidate/lib/validators'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'ForgotPassword',
@@ -85,22 +86,35 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({
+      userEmail: state => state.userEmail
+    })
+  },
   methods: {
+    ...mapActions([
+      'searchEmail'
+    ]),
     hasHistory () {
       return window.history.length > 2
     },
-    submit () {
+    async submit () {
       this.isLoading = true
-      setTimeout(() => {
         this.$v.$touch()
         if (this.$v.$invalid) {
           alert('Erro ao tentar conectar, verifique os campos e tente novamente!')
           this.isLoading = false
         } else {
-          alert('form enviado')
-          this.isLoading = false
+          // eslint-disable-next-line no-unused-vars
+          const email = await this.searchEmail(this.user.email)
+          if (this.userEmail === '') {
+            alert('Email não cadastrado.')
+            this.isLoading = false
+          } else {
+            alert(`Redefinição de senha enviado para ${this.userEmail}`)
+            this.isLoading = false
+          }
         }
-      }, 1000)
     }
   },
   mounted () {

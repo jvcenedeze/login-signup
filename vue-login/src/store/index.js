@@ -10,7 +10,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: [],
+    user: {},
     userEmail: '',
     userPhone: ''
   },
@@ -22,7 +22,14 @@ export default new Vuex.Store({
   actions: {
     async searchUser ({ commit }, email) {
       const response = await apiUser.get(`/users?email=${email}`)
-      console.log(response.data[0])
+      if (response.data[0] !== undefined) {
+        commit('setUser', response.data[0])
+      } else {
+        commit('setUser', '')
+      }
+    },
+    async searchEmail ({ commit }, email) {
+      const response = await apiUser.get(`/users?email=${email}`)
       if (response.data[0] !== undefined) {
         commit('setEmail', response.data[0].email)
       } else {
@@ -31,7 +38,6 @@ export default new Vuex.Store({
     },
     async searchPhone ({ commit }, phone) {
       const response = await apiUser.get(`/users?celular=${phone}`)
-      console.log(response.data[0])
       if (response.data[0] !== undefined) {
         commit('setPhone', response.data[0].celular)
       } else {
@@ -41,7 +47,6 @@ export default new Vuex.Store({
     async postUser ({ commit }, user) {
       try {
         const response = await apiUser.post('/users/', user)
-        console.log(response.data)
         commit('setUser', response.data)
       } catch (error) {
         alert('Erro: ', error)
