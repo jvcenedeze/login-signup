@@ -1,4 +1,11 @@
 # vue-login
+As páginas se encontram nas seguintes rotas:
+```
+-Página de cadastro: '/signup'
+-Página de login: '/login'
+-Página de recuperar senha: '/esqueci-senha'
+-Página de nova senha: '/nova-senha'
+```
 
 ## Instalação das dependências
 ```
