@@ -39,7 +39,7 @@
           >
             Digite um e-mail válido.
           </small>
-          <div class="buttons-submit mt-3 d-flex justify-content-between">
+          <div class="buttons-submit mt-4 d-flex justify-content-between">
             <button
               class="btn btn-back"
               :disabled="isLoading"

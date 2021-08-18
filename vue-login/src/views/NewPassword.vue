@@ -184,7 +184,7 @@ export default {
           alert('Erro ao tentar conectar, verifique os campos e tente novamente!')
           this.isLoading = false
         } else {
-          alert('form enviado')
+          alert('Senha redefinida com sucesso!')
           this.isLoading = false
           this.$router.push('/login')
         }

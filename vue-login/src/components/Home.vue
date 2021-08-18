@@ -92,6 +92,11 @@ export default {
   border: 1px solid #ffffff4d;
   margin: 62px 10px 33px 10px;
 }
+@media (max-width: 372px) {
+  #nav button {
+    margin: 10px;
+  }
+}
 #nav button:focus {
   box-shadow: none;
 }
