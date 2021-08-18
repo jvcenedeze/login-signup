@@ -4,9 +4,9 @@
       <div class="col-sm-2"></div>
       <div class="col-12 col-sm-8">
         <div class="d-flex flex-column justify-content-center align-items-center">
-          <p class="text-header">Digite seu e-mail de cadastro</p>
-          <p class="text-body">Você receberá, em seu e-mail, o link para redefinir a sua senha</p>
-          <div class="input-group mt-3">
+          <p class="text-forgot-header">Digite seu e-mail de cadastro</p>
+          <p class="text-forgot-body">Você receberá, em seu e-mail, o link para redefinir a sua senha</p>
+          <div class="input-group mt-1">
             <span
               class="input-group-text"
               id="basic-addon1"
@@ -33,12 +33,31 @@
               aria-describedby="basic-addon1"
             >
           </div>
-                    <small
+          <small
             class="text-danger"
             v-if="!$v.user.email.email"
           >
             Digite um e-mail válido.
           </small>
+          <div class="buttons-submit mt-3 d-flex justify-content-between">
+            <button
+              class="btn btn-back"
+              :disabled="isLoading"
+              @click="hasHistory() ? $router.go(-1) : $router.push('/')"
+            >
+              Voltar
+            </button>
+            <button
+              class="btn btn-submit"
+              :disabled="isLoading"
+              @click="submit"
+            >
+              <div v-if="!isLoading">Enviar</div>
+              <div v-else>
+                <div class="loader">Loading...</div>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -51,19 +70,159 @@ import { required, email } from 'vuelidate/lib/validators'
 
 export default {
   name: 'ForgotPassword',
-  data() {
+  data () {
     return {
+      isLoading: false,
       user: {
         email: ''
       }
     }
   },
-    validations () {
+  validations () {
     return {
       user: {
         email: { required, email }
       }
     }
+  },
+  methods: {
+    hasHistory () {
+      return window.history.length > 2
+    },
+    submit () {
+      this.isLoading = true
+      setTimeout(() => {
+        this.$v.$touch()
+        if (this.$v.$invalid) {
+          alert('Erro ao tentar conectar, verifique os campos e tente novamente!')
+          this.isLoading = false
+        } else {
+          alert('form enviado')
+          this.isLoading = false
+        }
+      }, 1000)
+    }
+  },
+  mounted () {
+    document.title = "Esqueci a Senha"
   }
 }
 </script>
+
+<style lang="scss" scoped>
+p.text-forgot-header {
+  padding-top: 42px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #777777;
+}
+p.text-forgot-body {
+  font-size: 16px;
+  font-weight: 400;
+  color: #777777;
+}
+.buttons-submit {
+  width: 100%;
+  button {
+    background: #4ad395;
+    width: 45%;
+    height: 50px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+  }
+  button:focus {
+    box-shadow: none;
+  }
+  button:hover {
+    color: white;
+  }
+  button.btn-back {
+    font-weight: 400;
+    color: #777777;
+    background: #e5e5e5;
+  }
+}
+
+// loading
+.loader {
+  font-size: 10px;
+  margin: 7px auto;
+  text-indent: -9999em;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  background: -moz-linear-gradient(
+    left,
+    #ffffff 10%,
+    rgba(255, 255, 255, 0) 42%
+  );
+  background: -webkit-linear-gradient(
+    left,
+    #ffffff 10%,
+    rgba(255, 255, 255, 0) 42%
+  );
+  background: -o-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+  background: -ms-linear-gradient(
+    left,
+    #ffffff 10%,
+    rgba(255, 255, 255, 0) 42%
+  );
+  background: linear-gradient(
+    to right,
+    #ffffff 10%,
+    rgba(255, 255, 255, 0) 42%
+  );
+  position: relative;
+  -webkit-animation: load3 1.4s infinite linear;
+  animation: load3 1.4s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.loader:before {
+  width: 50%;
+  height: 50%;
+  background: #ffffff;
+  border-radius: 100% 0 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+}
+.loader:after {
+  background: #4ad395;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: "";
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+@-webkit-keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+</style>

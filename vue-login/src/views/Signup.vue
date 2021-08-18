@@ -4,7 +4,7 @@
       <div class="col-sm-2"></div>
       <div class="col-12 col-sm-8">
         <div class="d-flex flex-column justify-content-center align-items-center">
-          <div class="input-group mt-3">
+          <div class="input-group">
             <span class="input-group-text"><svg
                 width="18"
                 height="20"
@@ -210,9 +210,8 @@
             class="text-danger"
             v-if="user.confirmPassword && user.password !== user.confirmPassword"
           >
-            Digite as senhas iguais.
+            As senhas digitadas não são iguais.
           </small>
-
           <div class="d-flex justify-content-center mt-3">
             <input
               type="checkbox"
@@ -244,7 +243,8 @@
 
 <script>
 
-import { required, email, minLength, numeric, sameAs } from 'vuelidate/lib/validators'
+import { mapActions, mapState } from 'vuex'
+import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
 
 export default {
   name: 'Login',
@@ -265,15 +265,26 @@ export default {
     return {
       user: {
         name: { required, minLength: minLength(3) },
-        phone: { required, numeric, minLength: minLength(10) },
+        phone: { required, minLength: minLength(10) },
         email: { required, email },
         password: { required, minLength: minLength(6) },
-        confirmPassword: { required, sameAsPassword: sameAs('user.password') },
+        confirmPassword: { required, sameAsPassword: sameAs('password') },
         confirmTerm: { required }
       }
     }
   },
+  computed: {
+    ...mapState({
+      userEmail: state => state.userEmail,
+      userPhone: state => state.userPhone
+    }),
+  },
   methods: {
+    ...mapActions([
+      'searchUser',
+      'searchPhone',
+      'postUser'
+    ]),
     showPassword (id) {
       let input = document.getElementById(id);
       if (input.type === "password") {
@@ -282,19 +293,42 @@ export default {
         input.type = "password";
       }
     },
-    submit () {
+    async submit () {
       this.isLoading = true
-      setTimeout(() => {
-        this.$v.$touch()
-        if (this.$v.$invalid) {
-          alert('Erro ao tentar conectar, verifique os campos e tente novamente!')
-          this.isLoading = false
-        } else {
-          alert('form enviado')
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        alert('Erro ao tentar conectar, verifique os campos e tente novamente!')
+        this.isLoading = false
+      } else {
+        try {
+          // eslint-disable-next-line no-unused-vars
+          const email = await this.searchUser(this.user.email)
+          // eslint-disable-next-line no-unused-vars
+          const phone = await this.searchPhone(this.user.phone)
+          if (this.userEmail === '' && this.userPhone === '') {
+            this.postUser({
+              nome: this.user.name,
+              celular: this.user.phone,
+              email: this.user.email,
+              senha: this.user.password
+            })
+            alert('Formulário enviado com sucesso')
+            this.isLoading = false
+          } else if (this.userEmail === '') {
+            alert('Celular já cadastrado')
+            this.isLoading = false
+          } else if (this.userPhone === '') {
+            alert('Email já cadastrado')
+            this.isLoading = false
+          } else {
+            alert('Erro ao cadastrar, tente novamente.')
+            this.isLoading = false
+          }
+        } catch (error) {
+          alert('Erro ao comunicar com servidor: ', error)
           this.isLoading = false
         }
-      }, 1000)
-
+      }
     }
   },
   mounted () {
