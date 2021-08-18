@@ -1,24 +1,27 @@
 # vue-login
 
-## Project setup
+## Instalação das dependências
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compacta e inicia servidor para desenvolvimento
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compacta e minifica para produção
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### Correção de erros
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Inicia servidor JSON Server
+```
+cd db
+npm start
+```
