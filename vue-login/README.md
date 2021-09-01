@@ -1,5 +1,9 @@
 # vue-login
-As páginas se encontram nas seguintes rotas:
+```
+Projeto realizado com as telas de login, cadastro, mudar senha e recuperar senha. Neste projeto foi utilizado VueJS, Vuex, Vue Router, Bootstrap, Axios, JSON Server para simular o banco de dados e dependências de Node.js para melhora do projeto. É possível efetuar o cadastro, não podendo repetir o email, e efetuar login com a conta cadastrada.
+```
+
+## Rotas para acessar as páginas:
 ```
 -Página de cadastro: '/signup'
 -Página de login: '/login'
